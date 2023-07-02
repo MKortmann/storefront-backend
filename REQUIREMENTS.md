@@ -44,7 +44,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id
   > SERIAL PRIMARY KEY
 - name
-  > VARCHAR(150)
+  > VARCHAR(100)
 - price
   > INTEGER
 - [OPTIONAL] category

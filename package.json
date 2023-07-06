@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start": "nodemon src/server.ts",
+    "start": "npm run docker && nodemon src/server.ts",
     "clean": "rm -rf dist",
     "build": "npx tsc",
+    "docker": "docker-compose up",
     "prettier": "prettier --write '**/*.ts'",
     "lint": "eslint . --ext .ts",
     "prod": "concurrently 'npm run start:prod' 'npm run watch:ts'",

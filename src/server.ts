@@ -1,15 +1,15 @@
-import express, { Request, Response } from 'express'
-import bodyParser from 'body-parser'
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import routes from './routes/index';
 
-const app: express.Application = express()
-const address: string = "0.0.0.0:3000"
+const app = express();
+app.use(cors());
+app.use('/', routes);
 
-app.use(bodyParser.json())
+dotenv.config();
+const port = process.env.PORT;
 
-app.get('/', function (req: Request, res: Response) {
-    res.send('Hello World!')
-})
-
-app.listen(3000, function () {
-    console.log(`starting app on: ${address}`)
-})
+app.listen(port, (): void => {
+  console.log(`Server started on port: ${port}`);
+});

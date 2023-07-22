@@ -1,17 +1,18 @@
 {
   "dev": {
     "driver": "pg",
-    "host": "127.0.0.1",
+    "host": "db",
     "port": "5432",
     "database": "store",
-    "user": "turtles",
-    "password": "fsldkj123"
+    "user": "postgres",
+    "password": "12345",
+    "multipleStatements": true
   },
   "test": {
     "driver": "pg",
-    "host": "127.0.0.1",
+    "host": "db",
     "database": "store_test",
-    "user": "turtles",
-    "password": "fsldkj123"
+    "user": "postgres",
+    "password": "12345"
   }
 }

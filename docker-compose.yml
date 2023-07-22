@@ -1,17 +1,35 @@
 version: '3'
 
 services:
-  postgres:
-    image: postgres:latest
+  db:
+    # image: postgres:latest
+    build: .
     ports:
       - 5433:5432
     volumes:
       - postgres:/var/lib/postgresql/data
-      - ./postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: store
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      # - ./postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    tty: true
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  migration:
+    build:
+      context: .
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy # Wait for the db service to be healthy (available) before starting the migration service
+    volumes:
+      - ./migrations:/migrations
+    command: bash -c "db-migrate up --config /app/config/database.json -e dev"
 
 volumes:
   postgres:

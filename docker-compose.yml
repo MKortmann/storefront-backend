@@ -29,7 +29,7 @@ services:
         condition: service_healthy # Wait for the db service to be healthy (available) before starting the migration service
     volumes:
       - ./migrations:/migrations
-    command: bash -c "db-migrate up --config /app/config/database.json -e dev"
+    command: bash -c "db-migrate up --config /app/config/database.json -e dev --migrations-dir /migrations" # --migrations-dir to point to the correct directory
 
 volumes:
   postgres:

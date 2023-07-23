@@ -68,10 +68,10 @@ These are the notes from a meeting with the frontend developer that describe wha
 - id of each product in the order
   > product_id (foreign key to products(id))
   - > BIGINT REFERENCES products(id)
-- quantity of each product in the order
-  > BIGINT
 - user_id (foreign key to users(id))
   > BIGINT REFERENCES users(id)
+- quantity of each product in the order
+  > BIGINT
 - status of order (active or complete)
   > VARCHAR(20)
 - created_at

@@ -18,6 +18,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - my_network
 
   migration:
     build:
@@ -30,6 +32,23 @@ services:
     volumes:
       - ./migrations:/migrations
     command: bash -c "db-migrate up --config /app/config/database.json -e dev --migrations-dir /migrations" # --migrations-dir to point to the correct directory
+    networks:
+      - my_network
+
+  # client:
+  #   command: psql -h db -U postgres
+  #   env_file:
+  #     - .env
+  #   tty: true
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   networks:
+  #     - my_network
 
 volumes:
   postgres:
+
+networks:
+  my_network:
+    driver: bridge

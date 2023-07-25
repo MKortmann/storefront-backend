@@ -2,23 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes/index';
-import { Pool } from 'pg';
+import bodyParser from 'body-parser';
+import user_store_routes from './handlers/users';
 
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 app.use('/', routes);
 
-// Load your database config from the JSON file
-// const dbConfig = require('../databse.json').dev;
-
-// // Set up the database connection pool
-// const pool = new Pool({
-//   host: dbConfig.host,
-//   port: dbConfig.port,
-//   database: dbConfig.database,
-//   user: dbConfig.user,
-//   password: dbConfig.password,
-// });
+user_store_routes(app);
 
 dotenv.config();
 const port = process.env.PORT;

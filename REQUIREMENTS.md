@@ -60,19 +60,21 @@ These are the notes from a meeting with the frontend developer that describe wha
   > VARCHAR(150)
 - password_digest
   > VARCHAR(150)
+- email - optional
+  > VARCHAR(100)
 
 #### Orders
 
 - id
   > SERIAL PRIMARY KEY
+- quantity of each product in the order
+  > BIGINT
+- order_status (active or complete)
+  > VARCHAR(20)
+- created_at
+  > TIMESTAMP (optional)
 - id of each product in the order
   > product_id (foreign key to products(id))
   - > BIGINT REFERENCES products(id)
 - user_id (foreign key to users(id))
   > BIGINT REFERENCES users(id)
-- quantity of each product in the order
-  > BIGINT
-- status of order (active or complete)
-  > VARCHAR(20)
-- created_at
-  > TIMESTAMP (optional)

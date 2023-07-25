@@ -11,6 +11,7 @@
   "test": {
     "driver": "pg",
     "host": "db",
+    "port": "5432",
     "database": "store_test",
     "user": "postgres",
     "password": "12345"

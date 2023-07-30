@@ -66,7 +66,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Orders
 
 - id
-  > SERIAL PRIMARY KEY
+  > INT PRIMARY KEY
 - quantity of each product in the order
   > BIGINT
 - order_status (active or complete)

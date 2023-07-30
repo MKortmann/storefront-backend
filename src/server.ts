@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import routes from './routes/index';
 import bodyParser from 'body-parser';
 import user_store_routes from './handlers/users';
+import product_store_routes from './handlers/products';
+import order_store_routes from './handlers/orders';
 
 const app = express();
 app.use(cors());
@@ -11,6 +13,8 @@ app.use(bodyParser.json());
 app.use('/', routes);
 
 user_store_routes(app);
+product_store_routes(app);
+order_store_routes(app);
 
 dotenv.config();
 const port = process.env.PORT;

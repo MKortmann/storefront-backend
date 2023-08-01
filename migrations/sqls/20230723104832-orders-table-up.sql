@@ -1,6 +1,6 @@
 -- It behavies sames as SERIAL. Here just as learn contenct
 
-CREATE SEQUENCE orders_id_seq START 0;
+CREATE SEQUENCE orders_id_seq START 1;
 
 
 CREATE TABLE IF NOT EXISTS orders (

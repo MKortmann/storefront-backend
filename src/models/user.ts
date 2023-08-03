@@ -56,10 +56,35 @@ export class UserStore {
 
       console.log(`user: ${JSON.stringify(result.rows[0])}`);
 
+      console.log(result);
       const user = result.rows[0];
       return user;
     } catch (err) {
       throw new Error(`Unable to create a new user ${(u.firstname, u.lastname)}`);
+    }
+  }
+
+  async delete(id: string): Promise<string> {
+    try {
+      const sql = 'DELETE FROM users WHERE id=($1)';
+
+      //@ts-ignore
+      const conn = await Client.connect();
+
+      const result = await conn.query(sql, [id]);
+      console.log(result);
+
+      const rowCount = result.rowCount;
+
+      conn.release();
+      console.log(`rowCount: ${rowCount}`);
+      if (rowCount == 1) {
+        return `user deleted`;
+      } else {
+        throw new Error(`User with ID ${id} was not founded`);
+      }
+    } catch (err) {
+      throw new Error(`Could not delete the user ${id}. Error: ${err}`);
     }
   }
 }

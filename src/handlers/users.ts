@@ -45,10 +45,22 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
+const deleteUser = async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  try {
+    const result = await store.delete(id);
+    res.json({ message: result });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
+
 const user_store_routes = (app: express.Application) => {
   app.get('/users', index);
   app.get('/user/:id', show);
   app.post('/user', createUser);
+  app.delete('/user/:id', deleteUser);
 };
 
 export default user_store_routes;

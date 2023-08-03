@@ -29,6 +29,8 @@ These are the notes from a meeting with the frontend developer that describe wha
   > user/:id [GET]
 - Create N[Bearer token required]
   > user [POST]
+- dELETE N[Bearer token required]
+  > user/:id [DEL]
 
 #### Orders
 

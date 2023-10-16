@@ -25,4 +25,71 @@ export class OrderStore {
       throw new Error(`Could not get orders. Order: ${err}`);
     }
   }
+
+  async show(id: string): Promise<Order> {
+    try {
+      const sql = 'SELECT * FROM orders WHERE id=($1)';
+      //@ts-ignore
+      const conn = await Client.connect();
+      const result = await conn.query(sql, [id]);
+      conn.release();
+
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Could not find order ${id}. Error: ${err}`);
+    }
+  }
+
+  async create(u: Order): Promise<Order> {
+    try {
+      const sql =
+        'INSERT INTO orders (quantity, order_status, created_at, product_id, user_id) VALUES($1, $2, $3, $4, $5) RETURNING *';
+      // @ts-ignore
+      const conn = await Client.connect();
+
+      const result = await conn.query(sql, [
+        u.quantity,
+        u.order_status,
+        u.created_at,
+        u.product_id,
+        u.user_id,
+      ]);
+
+      console.log(`user: ${JSON.stringify(result.rows[0])}`);
+
+      console.log(result);
+      const order = result.rows[0];
+      return order;
+    } catch (err) {
+      throw new Error(
+        `Unable to create a new order ${
+          (u.quantity, u.order_status, u.created_at, u.product_id, u.user_id)
+        }`
+      );
+    }
+  }
+
+  async delete(id: string): Promise<string> {
+    try {
+      const sql = 'DELETE FROM orders WHERE id=($1)';
+
+      //@ts-ignore
+      const conn = await Client.connect();
+
+      const result = await conn.query(sql, [id]);
+      console.log(result);
+
+      const rowCount = result.rowCount;
+
+      conn.release();
+      console.log(`rowCount: ${rowCount}`);
+      if (rowCount == 1) {
+        return `order deleted`;
+      } else {
+        throw new Error(`Order with ID ${id} was not founded`);
+      }
+    } catch (err) {
+      throw new Error(`Could not delete the order ${id}. Error: ${err}`);
+    }
+  }
 }

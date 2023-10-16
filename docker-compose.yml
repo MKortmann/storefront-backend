@@ -4,20 +4,28 @@ services:
   db:
     # image: postgres:latest
     build: .
+    # maps host machine port 5433 to the container port 5432
     ports:
       - 5433:5432
+    # define volumes for persisting data
     volumes:
+      # docker create a volume name postgres mounted to /var/lib/postgresql/data
       - postgres:/var/lib/postgresql/data
+      # it maps a init.sql file at our host machine to the /docker...
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql #if we want to init with some sql
       # - ./postgres-data:/var/lib/postgresql/data
+    # Docker reads the .env file and make it available to the container as it was defined there
     env_file:
       - .env
+    # make sure it runs in iteractive mode
     tty: true
+    # make sure the pg is ready and if failed, retries after 5 seconds
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
+    # connected to the custom bridge network: my_network
     networks:
       - my_network
 
@@ -26,10 +34,12 @@ services:
       context: .
     env_file:
       - .env
+    # make sure the db is ready before to start the migration
     depends_on:
       db:
         condition: service_healthy # Wait for the db service to be healthy (available) before starting the migration service
     volumes:
+      # maps the migration directory from my host machine to the /migration directory within the container
       - ./migrations:/migrations
     command: bash -c "db-migrate up --config /app/config/database.json -e dev --migrations-dir /migrations" # --migrations-dir to point to the correct directory
     networks:

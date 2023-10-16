@@ -23,4 +23,61 @@ export class ProductStore {
       throw new Error(`Could not get products. Error: ${err}`);
     }
   }
+
+  async show(id: string): Promise<Product> {
+    try {
+      const sql = 'SELECT * FROM products WHERE id=($1)';
+      //@ts-ignore
+      const conn = await Client.connect();
+      const result = await conn.query(sql, [id]);
+      conn.release();
+
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`Could not find user ${id}. Error: ${err}`);
+    }
+  }
+
+  async create(u: Product): Promise<Product> {
+    try {
+      const sql =
+        'INSERT INTO products (name, price, category) VALUES($1, $2, $3) RETURNING *';
+      // @ts-ignore
+      const conn = await Client.connect();
+
+      const result = await conn.query(sql, [u.name, u.price, u.category]);
+
+      console.log(`user: ${JSON.stringify(result.rows[0])}`);
+
+      console.log(result);
+      const product = result.rows[0];
+      return product;
+    } catch (err) {
+      throw new Error(`Unable to create a new product ${(u.name, u.price, u.category)}`);
+    }
+  }
+
+  async delete(id: string): Promise<string> {
+    try {
+      const sql = 'DELETE FROM products WHERE id=($1)';
+
+      //@ts-ignore
+      const conn = await Client.connect();
+
+      const result = await conn.query(sql, [id]);
+      console.log(result);
+
+      const rowCount = result.rowCount;
+
+      conn.release();
+      console.log(`rowCount: ${rowCount}`);
+      if (rowCount == 1) {
+        return `product deleted`;
+      } else {
+        throw new Error(`Product with ID ${id} was not founded`);
+      }
+    } catch (err) {
+      throw new Error(`Could not delete the product ${id}. Error: ${err}`);
+    }
+  }
 }

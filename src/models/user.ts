@@ -3,7 +3,7 @@ import Client from '../database';
 import bcrypt from 'bcrypt';
 
 export type User = {
-  id: number;
+  id?: number;
   firstname: string;
   lastname: string;
   email: string;
@@ -86,5 +86,25 @@ export class UserStore {
     } catch (err) {
       throw new Error(`Could not delete the user ${id}. Error: ${err}`);
     }
+  }
+
+  async authenticate(u: User): Promise<User | null> {
+    const sql = 'SELECT password_digest FROM users WHERE email=($1)';
+    // @ts-ignore
+    const conn = await Client.connect();
+    const result = await conn.query(sql, [u.email]);
+
+    if (result.rows.length) {
+      const user = result.rows[0];
+
+      console.log(`result: ${result}`);
+
+      if (await bcrypt.compare(u.password + pepper, user.password_digest)) {
+        console.log('compared! Matched!');
+        return user;
+      }
+    }
+    console.log('password not matched!');
+    return null;
   }
 }

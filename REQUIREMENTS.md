@@ -60,10 +60,10 @@ These are the notes from a meeting with the frontend developer that describe wha
   > VARCHAR(150)
 - lastName
   > VARCHAR(150)
-- password_digest
-  > VARCHAR(150)
 - email - optional
   > VARCHAR(100)
+- password_digest
+  > VARCHAR(150)
 
 #### Orders
 

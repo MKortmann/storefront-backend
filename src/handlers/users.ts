@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { User, UserStore } from '../models/user';
 import jwt from 'jsonwebtoken';
+import { Login } from '../types';
 
 const store = new UserStore();
 
@@ -40,12 +41,7 @@ const createUser = async (req: Request, res: Response) => {
   };
   console.log(`user: ${JSON.stringify(user)}`);
   try {
-    const secret = process.env.TOKEN_SECRET!;
-
-    if (!secret) {
-      throw new Error('TOKEN_SECRET is not defined');
-    }
-    const token = jwt.sign({ user: user }, secret);
+    const token = generateJwtToken(user);
 
     const result = await store.create(user);
     console.log(`user created: ${JSON.stringify(result)}`);
@@ -76,34 +72,48 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ *
+ * @param req
+ * @param res
+ * @returns token - so the user can use it for further requests
+ */
 const authenticateUser = async (req: Request, res: Response) => {
-  console.log(req);
-  const login: any = {
+  try {
+    const login: Login = req.body;
+
+    if (!login.email || !login.password) {
+      return res.status(400).json({ error: 'Missing email or password' });
+    }
+
+    console.log(`User tried to log in: ${JSON.stringify(login)}`);
+
+    const user = await store.authenticate(login);
+
+    if (user) {
+      const token = generateJwtToken(user);
+
+      return res.status(200).json(token);
+    } else {
+      return res.status(401).json({ error: 'Authentication failed' });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const updateUser = async (req: Request, res: Response) => {
+  const user: User = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
     email: req.body.email,
     password: req.body.password,
   };
-  console.log(`user tryied to log logged: ${JSON.stringify(login)}`);
-
-  //this part here we use to create a new product... I am adding at authenticate...
-  // try {
-  //   //verify the token
-  //   const authorizationHeader = req.headers.authorization;
-  //   const token = authorizationHeader?.split(' ')[1]!;
-  //   console.log(authorizationHeader);
-
-  //   console.log('token');
-  //   console.log(token);
-  //   jwt.verify(token, process.env.TOKEN_SECRET!)
-  //   // jwt.verify(req.body.token, process.env.TOKEN_SECRET!)
-  //   console.log("token verified")
-  // } catch (err) {
-  //   res.status(401)
-  //   res.json(`Invalid token ${err}`)
-  //   return
-  // }
-
-  const result = await store.authenticate(login);
-
+  const id = req.params.id;
+  console.log(`id: ${id}`);
+  console.log(`book: ${JSON.stringify(user)}`);
+  const result = await store.update(id, user);
   try {
     res.send(result);
   } catch (err) {
@@ -118,6 +128,16 @@ const user_store_routes = (app: express.Application) => {
   app.post('/user', createUser);
   app.delete('/user/:id', deleteUser);
   app.post('/user/authenticate', authenticateUser);
+  app.put('/user/:id', updateUser);
 };
 
 export default user_store_routes;
+function generateJwtToken(user: User) {
+  const secret = process.env.TOKEN_SECRET!;
+
+  if (!secret) {
+    throw new Error('TOKEN_SECRET is not defined');
+  }
+  const token = jwt.sign({ user: user }, secret);
+  return token;
+}

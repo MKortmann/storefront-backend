@@ -31,6 +31,8 @@ These are the notes from a meeting with the frontend developer that describe wha
   > user [POST]
 - DELETE N[Bearer token required]
   > user/:id [DEL]
+- UPDATE
+  > user/:id [PUT]
 
 #### Orders
 

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-
 import { ProductStore } from '../models/product';
+import { verifyAuthToken } from '../middleware/middleware';
 
 const store = new ProductStore();
 
@@ -26,6 +26,7 @@ const show = async (req: Request, res: Response) => {
   }
 };
 
+// token is required to be able to create a product
 const createProduct = async (req: Request, res: Response) => {
   const product: any = {
     name: req.body.name,
@@ -58,8 +59,8 @@ const deleteProduct = async (req: Request, res: Response) => {
 const product_store_routes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', show);
-  app.post('/product', createProduct);
-  app.delete('/product/:id', deleteProduct);
+  app.post('/product', verifyAuthToken, createProduct);
+  app.delete('/product/:id', verifyAuthToken, deleteProduct);
 };
 
 export default product_store_routes;

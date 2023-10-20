@@ -17,7 +17,7 @@ const index = async (_req: Request, res: Response) => {
 const show = async (req: Request, res: Response) => {
   const product = await store.show(req.params.id);
   console.log(`id: ${JSON.stringify(req.params.id)}`);
-  console.log(`user data received: ${JSON.stringify(product)}`);
+  console.log(`product data received: ${JSON.stringify(product)}`);
   try {
     res.send(product);
   } catch (err) {
@@ -56,8 +56,42 @@ const deleteProduct = async (req: Request, res: Response) => {
   }
 };
 
+const productByCategory = async (req: Request, res: Response) => {
+  console.log(`req.query.category: ${JSON.stringify(req.query.category)}`);
+  if (!req.query.category) {
+    return res.status(401).json({ error: 'Category is missing' });
+  }
+  const category: string = (req.query.category ?? '').toString();
+  const products = await store.showByCategory(category);
+
+  try {
+    res.send(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
+const getTopProducts = async (req: Request, res: Response) => {
+  console.log(`req.query.number: ${JSON.stringify(req.query.number)}`);
+  if (!req.query.number) {
+    return res.status(401).json({ error: 'number is missing' });
+  }
+  const numbers: number = parseInt(String(req.query.number || 5), 10);
+  const products = await store.showTopProducts(numbers);
+
+  try {
+    res.send(products);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 const product_store_routes = (app: express.Application) => {
   app.get('/products', index);
+  app.get('/products/category', productByCategory);
+  app.get('/products/top', getTopProducts);
   app.get('/products/:id', show);
   app.post('/product', verifyAuthToken, createProduct);
   app.delete('/product/:id', verifyAuthToken, deleteProduct);

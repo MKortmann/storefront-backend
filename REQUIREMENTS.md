@@ -18,6 +18,8 @@ These are the notes from a meeting with the frontend developer that describe wha
   > products/top?number=:number [GET]
 - [OPTIONAL] Products by category (args: product category)
   > products?category=:category [GET]
+- [OPTIONAL] delete product by id
+  > products/:id [DELETE]
 
 #### Users
 

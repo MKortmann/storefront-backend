@@ -34,7 +34,7 @@ export class ProductStore {
 
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Could not find user ${id}. Error: ${err}`);
+      throw new Error(`Could not find product with id: ${id}. Error: ${err}`);
     }
   }
 
@@ -78,6 +78,41 @@ export class ProductStore {
       }
     } catch (err) {
       throw new Error(`Could not delete the product ${id}. Error: ${err}`);
+    }
+  }
+
+  async showByCategory(category: string): Promise<Product> {
+    try {
+      console.log(`category: ${category}`);
+      const sql = 'SELECT * FROM products WHERE category=($1)';
+      //@ts-ignore
+      const conn = await Client.connect();
+      const result = await conn.query(sql, [category]);
+      conn.release();
+
+      console.log('result rows:');
+      console.log(result.rows);
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Could not find product from category ${category}. Error: ${err}`);
+    }
+  }
+
+  async showTopProducts(number: number): Promise<Product> {
+    try {
+      console.log(`number: ${number}`);
+      const sql =
+        'SELECT p.name AS product_name, SUM(o.quantity) AS total_quantity FROM products p JOIN orders o ON p.id = o.product_id GROUP BY p.id, p.name, p.category ORDER BY total_quantity DESC LIMIT $1';
+      //@ts-ignore
+      const conn = await Client.connect();
+      const result = await conn.query(sql, [number]);
+      conn.release();
+
+      console.log('result rows:');
+      console.log(result.rows);
+      return result.rows;
+    } catch (err) {
+      throw new Error(`Could not find top products Error: ${err}`);
     }
   }
 }

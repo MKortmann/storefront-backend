@@ -3,6 +3,8 @@ import { User, UserStore } from '../models/user';
 import jwt from 'jsonwebtoken';
 import { Login } from '../types';
 
+import { verifyAuthToken } from '../middleware/middleware';
+
 const store = new UserStore();
 
 interface CreateUserResponse {
@@ -24,8 +26,22 @@ const show = async (req: Request, res: Response) => {
   const user = await store.show(req.params.id);
   console.log(`id: ${JSON.stringify(req.params.id)}`);
   console.log(`user data received: ${JSON.stringify(user)}`);
+
+  if (!user) {
+    return res.status(401).json({ error: `No user with this id: ${req.params.id}` });
+  }
+
+  const getLast5Orders = await store.lastOrdersByUser(req.params.id);
+
+  const result = {
+    user,
+    orders: getLast5Orders,
+  };
+
+  console.log(result);
+
   try {
-    res.send(user);
+    res.send(result);
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -72,6 +88,25 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateUser = async (req: Request, res: Response) => {
+  const user: User = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    password: req.body.password,
+  };
+  const id = req.params.id;
+  console.log(`id: ${id}`);
+  console.log(`book: ${JSON.stringify(user)}`);
+  const result = await store.update(id, user);
+  try {
+    res.send(result);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 /**
  *
  * @param req
@@ -103,32 +138,13 @@ const authenticateUser = async (req: Request, res: Response) => {
   }
 };
 
-const updateUser = async (req: Request, res: Response) => {
-  const user: User = {
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    password: req.body.password,
-  };
-  const id = req.params.id;
-  console.log(`id: ${id}`);
-  console.log(`book: ${JSON.stringify(user)}`);
-  const result = await store.update(id, user);
-  try {
-    res.send(result);
-  } catch (err) {
-    res.status(400);
-    res.json(err);
-  }
-};
-
 const user_store_routes = (app: express.Application) => {
-  app.get('/users', index);
-  app.get('/user/:id', show);
-  app.post('/user', createUser);
-  app.delete('/user/:id', deleteUser);
+  app.get('/users', verifyAuthToken, index);
+  app.get('/user/:id', verifyAuthToken, show);
+  app.post('/user', verifyAuthToken, createUser);
+  app.delete('/user/:id', verifyAuthToken, deleteUser);
+  app.put('/user/:id', verifyAuthToken, updateUser);
   app.post('/user/authenticate', authenticateUser);
-  app.put('/user/:id', updateUser);
 };
 
 export default user_store_routes;

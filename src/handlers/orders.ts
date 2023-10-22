@@ -58,7 +58,20 @@ const deleteOrder = async (req: Request, res: Response) => {
   }
 };
 
+const ordersByUser = async (req: Request, res: Response) => {
+  const order = await store.currentOrderByUser(req.params.user_id, req.params.status);
+  console.log(`id: ${JSON.stringify(req.params.id)}`);
+  console.log(`user data received: ${JSON.stringify(order)}`);
+  try {
+    res.send(order);
+  } catch (err) {
+    res.status(400);
+    res.json(err);
+  }
+};
+
 const order_store_routes = (app: express.Application) => {
+  app.get('/users/:user_id/orders/:status', ordersByUser);
   app.get('/orders', index);
   app.get('/orders/:id', show);
   app.post('/order', createOrder);

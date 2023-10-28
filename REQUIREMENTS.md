@@ -14,12 +14,12 @@ These are the notes from a meeting with the frontend developer that describe wha
   > products/:id [GET]
 - Create [token required]
   > products [POST]
+- [OPTIONAL] delete product by id
+  > products/:id [DELETE]
 - [OPTIONAL] Top 5 most popular products
   > products/top?number=:number [GET]
 - [OPTIONAL] Products by category (args: product category)
   > products?category=:category [GET]
-- [OPTIONAL] delete product by id
-  > products/:id [DELETE]
 
 #### Users
 

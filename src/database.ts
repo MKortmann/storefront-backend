@@ -18,7 +18,7 @@ const {
   ENV,
 } = process.env;
 
-let client;
+let client: Pool;
 
 if (ENV === 'test') {
   client = new Pool({
@@ -28,9 +28,7 @@ if (ENV === 'test') {
     password: POSTGRES_PASSWORD,
     port: 5433,
   });
-}
-
-if (ENV === 'dev') {
+} else if (ENV === 'dev') {
   client = new Pool({
     host: POSTGRES_HOST,
     database: POSTGRES_DB,
@@ -38,9 +36,10 @@ if (ENV === 'dev') {
     password: POSTGRES_PASSWORD,
     port: parseInt(POSTGRES_PORT || '5432'),
   });
+} else {
+  throw new Error(`Unknown ENV: ${ENV}`);
 }
 
-// @ts-ignore
 client.on('error', (err) => {
   console.error('PostgreSQL connection error:', err.message);
 });

@@ -15,19 +15,17 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const show = async (req: Request, res: Response) => {
+  const id = req.params.id;
   try {
-    const product = await store.show(req.params.id);
+    const product = await store.show(id);
 
     if (!product) {
-      logger.warn(`Product with id: ${req.params.id} not found`);
-      res.status(404).json({ error: `Product with id: ${req.params.id} not found` });
-    } else {
-      res.status(200).json(product);
+      logger.warn(`Product with id: ${id} not found`);
+      res.status(404).json({ error: `Product with id: ${id} not found` });
     }
+    res.status(200).json(product);
   } catch (err) {
-    res
-      .status(400)
-      .json({ error: `Error fetching product with id: ${req.params.id}`, err });
+    res.status(400).json({ error: `Error fetching product with id: ${id}`, err });
   }
 };
 

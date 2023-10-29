@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { Login } from '../types';
 
 import { verifyAuthToken } from '../middleware/middleware';
+import { logger } from '../logger';
 
 const store = new UserStore();
 
@@ -13,38 +14,37 @@ interface CreateUserResponse {
 }
 
 const index = async (_req: Request, res: Response) => {
-  const users = await store.index();
   try {
-    res.send(users);
+    const users = await store.index();
+    logger.info(`fetched`);
+    res.status(200).send(users);
   } catch (err) {
-    res.status(400);
-    res.json(err);
+    res.status(500).json({ error: `Error fetching products`, err });
   }
 };
 
 const show = async (req: Request, res: Response) => {
-  const user = await store.show(req.params.id);
-  console.log(`id: ${JSON.stringify(req.params.id)}`);
-  console.log(`user data received: ${JSON.stringify(user)}`);
-
-  if (!user) {
-    return res.status(401).json({ error: `No user with this id: ${req.params.id}` });
-  }
-
-  const getLast5Orders = await store.lastOrdersByUser(req.params.id);
-
-  const result = {
-    user,
-    orders: getLast5Orders,
-  };
-
-  console.log(result);
-
+  const id = req.params.id;
   try {
-    res.send(result);
+    const user = await store.show(id);
+
+    if (!user) {
+      logger.warn(`User with id: ${id} not found`);
+      return res.status(404).json({ error: `No user with this id: ${id}` });
+    }
+
+    const getLast5Orders = await store.lastOrdersByUser(id);
+
+    const result = {
+      user,
+      orders: getLast5Orders,
+    };
+
+    logger.info(`Got user with id: ${id}, result: ${JSON.stringify(result)}`);
+
+    res.status(200).send(result);
   } catch (err) {
-    res.status(400);
-    res.json(err);
+    res.status(400).json({ error: `Error fetching user with id: ${id}`, err });
   }
 };
 
@@ -55,12 +55,13 @@ const createUser = async (req: Request, res: Response) => {
     email: req.body.email,
     password: req.body.password,
   };
-  console.log(`user: ${JSON.stringify(user)}`);
   try {
+    logger.info(`User requested to be created: ${JSON.stringify(user)}`);
     const token = generateJwtToken(user);
 
     const result = await store.create(user);
-    console.log(`user created: ${JSON.stringify(result)}`);
+
+    logger.info(`user created: ${JSON.stringify(result)}`);
     const response: CreateUserResponse = {
       user: result,
       token,
@@ -68,10 +69,9 @@ const createUser = async (req: Request, res: Response) => {
 
     res.status(200).json(response);
   } catch (err) {
-    console.error(err);
-
+    logger.error(err);
     res.status(400).json({
-      error: 'No possible to create an user',
+      error: `No possible to create an user: ${user}`,
       message: err,
     });
   }
@@ -82,9 +82,15 @@ const deleteUser = async (req: Request, res: Response) => {
 
   try {
     const result = await store.delete(id);
-    res.json({ message: result });
+    if (!result) {
+      logger.warn(`User with id: ${id} not found`);
+      res.status(404).json({ error: `User with id: ${id} not found` });
+    } else {
+      logger.info(`User with id: ${id} deleted`);
+      res.status(200).json({ info: `User with id: ${id} deleted` });
+    }
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json({ error: `Error deleting a user with id: ${id}`, err });
   }
 };
 
@@ -96,11 +102,19 @@ const updateUser = async (req: Request, res: Response) => {
     password: req.body.password,
   };
   const id = req.params.id;
-  console.log(`id: ${id}`);
-  console.log(`book: ${JSON.stringify(user)}`);
-  const result = await store.update(id, user);
   try {
-    res.send(result);
+    logger.info(`User requested to be updated: ${JSON.stringify(user)}`);
+    const result = await store.update(id, user);
+
+    if (!result) {
+      logger.warn(`User with id: ${id} not found`);
+      res
+        .status(404)
+        .json({ error: `User with id: ${id} not found. No possible to update` });
+    } else {
+      logger.info(`User with id: ${id} updated`);
+      res.status(200).json({ info: `User with id: ${id} updated`, user: user });
+    }
   } catch (err) {
     res.status(400);
     res.json(err);
@@ -121,20 +135,19 @@ const authenticateUser = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing email or password' });
     }
 
-    console.log(`User tried to log in: ${JSON.stringify(login)}`);
+    logger.info(`User tried to authenticate in: ${JSON.stringify(login)}`);
 
     const user = await store.authenticate(login);
 
     if (user) {
       const token = generateJwtToken(user);
-
-      return res.status(200).json(token);
+      logger.info(`user authenticated!! - token: ${token}`);
+      return res.status(200).json({ email: login.email, token });
     } else {
       return res.status(401).json({ error: 'Authentication failed' });
     }
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error', err });
   }
 };
 

@@ -16,7 +16,6 @@ interface CreateUserResponse {
 const index = async (_req: Request, res: Response) => {
   try {
     const users = await store.index();
-    logger.info(`fetched`);
     res.status(200).send(users);
   } catch (err) {
     res.status(500).json({ error: `Error fetching products`, err });
@@ -55,8 +54,8 @@ const createUser = async (req: Request, res: Response) => {
     email: req.body.email,
     password: req.body.password,
   };
+  logger.info(`User requested to be created: ${JSON.stringify(user)}`);
   try {
-    logger.info(`User requested to be created: ${JSON.stringify(user)}`);
     const token = generateJwtToken(user);
 
     const result = await store.create(user);

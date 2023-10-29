@@ -1,4 +1,3 @@
-// @ts-ignore
 import Client from '../database';
 import { logger } from '../logger';
 
@@ -14,86 +13,89 @@ export type Order = {
 export class OrderStore {
   async index(): Promise<Order[]> {
     try {
-      // @ts-ignore
       const conn = await Client.connect();
-      const sql = 'SELECT * FROM orders;';
+      const query = {
+        sql: 'SELECT * FROM orders;',
+      };
 
-      const result = await conn.query(sql);
+      const result = await conn.query(query.sql);
       conn.release();
+
+      logger.info(`Fetched orders: ${JSON.stringify(result.rows)}`);
 
       return result.rows;
     } catch (err) {
-      throw new Error(`Could not get orders. Order: ${err}`);
+      logger.error(`Could not get orders. Order: ${err}`);
+      throw err;
     }
   }
 
   async show(id: string): Promise<Order> {
     try {
-      const sql = 'SELECT * FROM orders WHERE id=($1)';
-      //@ts-ignore
+      const query = {
+        sql: 'SELECT * FROM orders WHERE id=($1)',
+        values: [id],
+      };
+
       const conn = await Client.connect();
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(query.sql, query.values);
       conn.release();
 
+      logger.info(`Fetch order id: ${id} - result: ${JSON.stringify(result)}`);
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Could not find order ${id}. Error: ${err}`);
+      logger.error(`Could not find order ${id}. Error: ${err}`);
+      throw err;
     }
   }
 
   async create(u: Order): Promise<Order> {
     try {
-      const sql =
-        'INSERT INTO orders (quantity, order_status, created_at, product_id, user_id) VALUES($1, $2, $3, $4, $5) RETURNING *';
-      // @ts-ignore
+      const query = {
+        sql: 'INSERT INTO orders (quantity, order_status, created_at, product_id, user_id) VALUES($1, $2, $3, $4, $5) RETURNING *',
+        values: [u.quantity, u.order_status, u.created_at, u.product_id, u.user_id],
+      };
+
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [
-        u.quantity,
-        u.order_status,
-        u.created_at,
-        u.product_id,
-        u.user_id,
-      ]);
+      const result = await conn.query(query.sql, query.values);
 
-      console.log(`user: ${JSON.stringify(result.rows[0])}`);
+      logger.info(`create order - result: ${JSON.stringify(result)}`);
 
-      console.log(result);
       const order = result.rows[0];
       return order;
     } catch (err) {
-      throw new Error(
+      logger.error(
         `Unable to create a new order ${
           (u.quantity, u.order_status, u.created_at, u.product_id, u.user_id)
         }`
       );
+      throw err;
     }
   }
 
-  async delete(id: string): Promise<string> {
+  async delete(id: string): Promise<number> {
     try {
-      const sql = 'DELETE FROM orders WHERE id=($1)';
+      const query = {
+        sql: 'DELETE FROM orders WHERE id=($1)',
+        values: [id],
+      };
 
-      //@ts-ignore
       const conn = await Client.connect();
 
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(query.sql, query.values);
       console.log(result);
 
-      const rowCount = result.rowCount;
-
       conn.release();
-      console.log(`rowCount: ${rowCount}`);
-      if (rowCount == 1) {
-        return `order deleted`;
-      } else {
-        throw new Error(`Order with ID ${id} was not founded`);
-      }
+      logger.info(`Try to delete user order: ${JSON.stringify(result)}`);
+
+      return result.rowCount;
     } catch (err) {
-      throw new Error(`Could not delete the order ${id}. Error: ${err}`);
+      logger.error(`No possible to delete order with id: ${id}`);
+      throw err;
     }
   }
-  async currentOrderByUser(user_id: string, status: string): Promise<Order> {
+  async currentOrderByUser(user_id: string, status: string): Promise<Order[]> {
     try {
       const query = {
         sql: 'SELECT * FROM orders WHERE user_id = $1 AND order_status = $2',
@@ -104,7 +106,7 @@ export class OrderStore {
       conn.release();
 
       logger.info(`Create order by user - result: ${JSON.stringify(result)}`);
-      return result.rows[0];
+      return result.rows;
     } catch (err) {
       logger.error(`Could not find active orders from user: ${user_id}. Error: ${err}`);
       throw err;

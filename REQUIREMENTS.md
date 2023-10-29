@@ -40,7 +40,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 #### Orders
 
-<!-- I just make one endpoint that fullfill the both first request below -->
+<!-- I just made one endpoint that fullfill the both first request below -->
 
 - Current Order by user (args: user id)[Bearer token required]
   > users/:user_id/orders/current [GET]

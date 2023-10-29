@@ -148,24 +148,6 @@ export class UserStore {
     }
   }
 
-  async currentOrderByUser(user_id: string, status: string): Promise<Order> {
-    try {
-      const query = {
-        sql: 'SELECT * FROM orders WHERE user_id = $1 AND order_status = $2',
-        values: [user_id, status],
-      };
-      const conn = await Client.connect();
-      const result = await conn.query(query.sql, query.values);
-      conn.release();
-
-      return result.rows[0];
-    } catch (err) {
-      throw new Error(
-        `Could not find active orders from user: ${user_id}. Error: ${err}`
-      );
-    }
-  }
-
   async lastOrdersByUser(user_id: string): Promise<Order[]> {
     try {
       const query = {
@@ -175,11 +157,11 @@ export class UserStore {
       const conn = await Client.connect();
       const result = await conn.query(query.sql, query.values);
       conn.release();
-      return result.rows; // Return all rows
+      logger.info(`Last orders by user - result: ${JSON.stringify(result)}`);
+      return result.rows;
     } catch (err) {
-      throw new Error(
-        `Could not find active orders from user: ${user_id}. Error: ${err}`
-      );
+      logger.error(`Could not find active orders from user: ${user_id}. Error: ${err}`);
+      throw err;
     }
   }
 }

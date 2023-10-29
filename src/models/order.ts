@@ -1,5 +1,6 @@
 // @ts-ignore
 import Client from '../database';
+import { logger } from '../logger';
 
 export type Order = {
   id: number;
@@ -92,23 +93,21 @@ export class OrderStore {
       throw new Error(`Could not delete the order ${id}. Error: ${err}`);
     }
   }
-
   async currentOrderByUser(user_id: string, status: string): Promise<Order> {
     try {
       const query = {
         sql: 'SELECT * FROM orders WHERE user_id = $1 AND order_status = $2',
         values: [user_id, status],
       };
-      //@ts-ignore
       const conn = await Client.connect();
       const result = await conn.query(query.sql, query.values);
       conn.release();
 
+      logger.info(`Create order by user - result: ${JSON.stringify(result)}`);
       return result.rows[0];
     } catch (err) {
-      throw new Error(
-        `Could not find active orders from user: ${user_id}. Error: ${err}`
-      );
+      logger.error(`Could not find active orders from user: ${user_id}. Error: ${err}`);
+      throw err;
     }
   }
 }

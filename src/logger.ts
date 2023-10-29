@@ -20,6 +20,12 @@ const warnFormat = winston.format((info) => {
   return info;
 })();
 
+const consoleNewlineFormat = winston.format.combine(
+  winston.format.printf(({ level, message, timestamp }) => {
+    return `${timestamp} [${level}]: ${message}\n`;
+  })
+);
+
 export const logger: winston.Logger = winston.createLogger({
   level: 'info',
   format: winston.format.combine(winston.format.timestamp(), winston.format.json()),
@@ -29,7 +35,8 @@ export const logger: winston.Logger = winston.createLogger({
         errorFormat,
         infoFormat,
         warnFormat,
-        winston.format.simple()
+        winston.format.simple(),
+        consoleNewlineFormat
       ),
     }),
     new winston.transports.File({ filename: 'error.log', level: 'error' }),

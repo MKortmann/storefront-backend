@@ -6,11 +6,14 @@ import bodyParser from 'body-parser';
 import user_store_routes from './handlers/users';
 import product_store_routes from './handlers/products';
 import order_store_routes from './handlers/orders';
+import { logRequestFinish, logRequestStart } from './middleware/middleware';
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(logRequestStart);
 app.use('/', routes);
+app.use(logRequestFinish);
 
 user_store_routes(app);
 product_store_routes(app);

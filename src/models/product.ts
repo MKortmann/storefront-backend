@@ -107,7 +107,6 @@ export class ProductStore {
 
   async showTopProducts(number: number): Promise<Product[]> {
     try {
-      console.log(`number: ${number}`);
       const query = {
         sql: 'SELECT p.name AS product_name, SUM(o.quantity) AS total_quantity FROM products p JOIN orders o ON p.id = o.product_id GROUP BY p.id, p.name, p.category ORDER BY total_quantity DESC LIMIT $1',
         values: [number],

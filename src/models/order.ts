@@ -41,7 +41,7 @@ export class OrderStore {
       const result = await conn.query(query.sql, query.values);
       conn.release();
 
-      logger.info(`Fetch order id: ${id} - result: ${JSON.stringify(result)}`);
+      logger.info(`Fetch order by id: ${id} - result: ${JSON.stringify(result)}`);
       return result.rows[0];
     } catch (err) {
       logger.error(`Could not find order ${id}. Error: ${err}`);

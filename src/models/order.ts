@@ -2,7 +2,7 @@ import Client from '../database';
 import { logger } from '../logger';
 
 export type Order = {
-  id: number;
+  id?: number;
   quantity: number;
   order_status: string;
   created_at: Date;

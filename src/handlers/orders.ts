@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 
-import { OrderStore } from '../models/order';
+import { Order, OrderStore } from '../models/order';
 import { logger } from '../logger';
 
 const store = new OrderStore();
@@ -31,7 +31,7 @@ const show = async (req: Request, res: Response) => {
 };
 
 const createOrder = async (req: Request, res: Response) => {
-  const order: any = {
+  const order: Order = {
     quantity: req.body.quantity,
     order_status: req.body.order_status,
     created_at: new Date(),

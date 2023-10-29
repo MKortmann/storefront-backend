@@ -98,7 +98,7 @@ export class UserStore {
     }
   }
 
-  async update(id: string, u: User): Promise<QueryResult<any>> {
+  async update(id: string, u: User): Promise<QueryResult> {
     try {
       const query = {
         sql: 'UPDATE users SET firstname=$1, lastname=$2, email=$3 WHERE id=($4)',
@@ -106,6 +106,7 @@ export class UserStore {
       };
       const conn = await Client.connect();
       const result = await conn.query(query.sql, query.values);
+      console.log(typeof result);
 
       logger.info(`User update result: ${JSON.stringify(result)}`);
 

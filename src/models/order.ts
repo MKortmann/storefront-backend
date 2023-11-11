@@ -21,7 +21,7 @@ export class OrderStore {
       const result = await conn.query(query.sql);
       conn.release();
 
-      logger.info(`Fetched orders: ${JSON.stringify(result.rows)}`);
+      // logger.info(`Fetched orders: ${JSON.stringify(result.rows)}`);
 
       return result.rows;
     } catch (err) {

@@ -2,8 +2,33 @@
   "spec_dir": "dist/tests",
   "spec_files": ["**/*[sS]pec.?(m)js"],
   "helpers": ["helpers/**/*.?(m)js"],
+  "junit": {
+    "suppressSpecReporter": false
+  },
   "env": {
     "stopSpecOnExpectationFailure": false,
-    "random": true
+    "random": true,
+    "reporters": [
+      {
+        "name": "jasmine-spec-reporter",
+        "options": {
+          "displayPending": true,
+          "displayStacktrace": "all",
+          "displaySuccessfulSpec": true,
+          "displayFailedSpec": true,
+          "displaySpecDuration": true,
+          "displaySuiteNumber": true,
+          "colors": {
+            "success": "green",
+            "failure": "red",
+            "pending": "yellow"
+          },
+          "displaySpecErrorsSummary": true,
+          "displaySummary": true,
+          "displayFailuresSummary": true,
+          "displayPendingSpec": true
+        }
+      }
+    ]
   }
 }

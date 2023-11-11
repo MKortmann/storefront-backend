@@ -7,6 +7,7 @@ import user_store_routes from './handlers/users';
 import product_store_routes from './handlers/products';
 import order_store_routes from './handlers/orders';
 import { logRequestFinish, logRequestStart } from './middleware/middleware';
+import { logger } from './logger';
 
 const app = express();
 app.use(cors());
@@ -23,5 +24,5 @@ dotenv.config();
 const port = process.env.PORT;
 
 app.listen(port, (): void => {
-  console.log(`Server started on port: ${port}`);
+  logger.info(`Server started on port: ${port}`);
 });

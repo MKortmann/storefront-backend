@@ -1,6 +1,11 @@
 import winston from 'winston';
 import kleur from 'kleur';
 
+interface ExtendedLogger extends winston.Logger {
+  test: winston.LeveledLogMethod;
+  testSuccess: winston.LeveledLogMethod;
+}
+
 const errorFormat = winston.format((info) => {
   if (info.level === 'error') {
     info.message = kleur.red(info.message);
@@ -19,7 +24,6 @@ const warnFormat = winston.format((info) => {
   }
   return info;
 })();
-
 const consoleNewlineFormat = winston.format.combine(
   winston.format.printf(({ level, message, timestamp }) => {
     return `${timestamp} [${level}]: ${message}\n`;

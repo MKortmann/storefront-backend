@@ -68,9 +68,9 @@ const createUser = async (req: Request, res: Response) => {
 
     res.status(200).json(response);
   } catch (err) {
-    logger.error(err);
+    logger.error(JSON.stringify(err));
     res.status(400).json({
-      error: `No possible to create an user: ${user}`,
+      error: `No possible to create an user: ${JSON.stringify(user)}`,
       message: err,
     });
   }
@@ -153,7 +153,7 @@ const authenticateUser = async (req: Request, res: Response) => {
 const user_store_routes = (app: express.Application) => {
   app.get('/users', verifyAuthToken, index);
   app.get('/user/:id', verifyAuthToken, show);
-  app.post('/user', verifyAuthToken, createUser);
+  app.post('/user', createUser);
   app.delete('/user/:id', verifyAuthToken, deleteUser);
   app.put('/user/:id', verifyAuthToken, updateUser);
   app.post('/user/authenticate', authenticateUser);

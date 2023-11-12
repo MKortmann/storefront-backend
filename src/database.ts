@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { logger } from './logger'
 /* pg module is a popular Node.js library used to interact with PostgreSQL databases.
 The pg module provides an interface for connecting to, querying, and managing PostgreSQL databases from Node.js applications.
 
@@ -20,13 +21,23 @@ const {
 
 let client: Pool;
 
+
+console.log('PostgreSQL Configuration:', {
+  host: POSTGRES_HOST,
+  database: POSTGRES_DB,
+  user: POSTGRES_USER,
+  password: POSTGRES_PASSWORD,
+  port: parseInt(POSTGRES_PORT || '5433'),
+});
+
+
 if (ENV === 'test') {
   client = new Pool({
     host: POSTGRES_HOST,
     database: POSTGRES_TEST_DB,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
-    port: 5433,
+    port: parseInt(POSTGRES_PORT || '5433'),
   });
 } else if (ENV === 'dev') {
   client = new Pool({
@@ -34,7 +45,7 @@ if (ENV === 'test') {
     database: POSTGRES_DB,
     user: POSTGRES_USER,
     password: POSTGRES_PASSWORD,
-    port: parseInt(POSTGRES_PORT || '5432'),
+    port: parseInt(POSTGRES_PORT || '5433'),
   });
 } else {
   throw new Error(`Unknown ENV: ${ENV}`);

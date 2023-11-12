@@ -13,10 +13,14 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g npm
-
-RUN npm install -g db-migrate \
+# making sure we install the compatible npm version with the nodejs installed in the postgres image
+RUN npm install -g npm@$(node -e "console.log(require('npm/package.json').version)") \
+    && npm install -g db-migrate \
     && npm install -g db-migrate-pg
+
+
+# Print Node.js and npm versions
+RUN node -v && npm -v
 
 # Just for init script - automatically execute SQL scripts over init
 # COPY migrations/sqls /docker-entrypoint-initdb.d/

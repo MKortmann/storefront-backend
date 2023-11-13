@@ -1,3 +1,4 @@
+# Sets the base image for my Docker container to the latest version PostgreSQL image availabler on Docker Hub.
 FROM postgres:latest
 
 # Set an environment variable to prevent prompts during package installation
@@ -13,7 +14,7 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# making sure we install the compatible npm version with the nodejs installed in the postgres image
+# making sure we install the compatible node version with the npm installed in the postgres image
 RUN npm install -g npm@$(node -e "console.log(require('npm/package.json').version)") \
     && npm install -g db-migrate \
     && npm install -g db-migrate-pg

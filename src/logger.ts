@@ -54,3 +54,16 @@ process.on('unhandledRejection', (error) => {
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught Exception:', error);
 });
+
+
+export const logTestStart = (specOrderStore: string, methodName: string, description: string) => {
+  logger.warn(`${specOrderStore} - ${methodName}: ${description} - started`);
+};
+
+export const logTestFinish = (specOrderStore: string, methodName: string, description: string) => {
+  logger.warn(`${specOrderStore} - ${methodName}: ${description} - successfully finished`);
+};
+
+export const logTestError = (specOrderStore: string, methodName: string, description: string, err: unknown) => {
+  logger.error(`${specOrderStore} - ${methodName}: ${description} - failed: ${err}`);
+};

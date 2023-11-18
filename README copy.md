@@ -128,6 +128,14 @@ Create an user, get the json webtoken returned, insert it. Now you are able to t
 http://localhost:3000/
 ```
 
+## Testing the API
+
+Just do:
+
+```
+npm run test
+```
+
 ## Contributions
 
 The Project was completed by me as a part of the FullStack Nanodegree Project. I fullfilled all all the requirements and also implemented additional features.

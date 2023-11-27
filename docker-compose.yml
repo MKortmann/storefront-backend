@@ -29,7 +29,7 @@ services:
     networks:
       - my_network
 
-  migration:
+  migration_dev:
     build:
       context: .
     env_file:
@@ -37,11 +37,25 @@ services:
     # make sure the db is ready before to start the migration
     depends_on:
       db:
-        condition: service_healthy # Wait for the db service to be healthy (available) before starting the migration service
+        condition: service_healthy
+    # maps the migration directory from the host machine to the /migration directory within the container
     volumes:
-      # maps the migration directory from my host machine to the /migration directory within the container
       - ./migrations:/migrations
-    command: bash -c "db-migrate up --config /app/config/database.json -e dev --migrations-dir /migrations" # --migrations-dir to point to the correct directory
+    command: bash -c "db-migrate up --config /app/config/database.json -e dev --migrations-dir /migrations"
+    networks:
+      - my_network
+
+  migration_test:
+    build:
+      context: .
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/migrations
+    command: bash -c "db-migrate up --config /app/config/database.json -e test --migrations-dir /migrations"
     networks:
       - my_network
 

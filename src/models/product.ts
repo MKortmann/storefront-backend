@@ -5,6 +5,7 @@ export type Product = {
   name: string;
   price: number;
   category: string;
+  quantity?: number;
 };
 
 export class ProductStore {
@@ -108,7 +109,7 @@ export class ProductStore {
   async showTopProducts(number: number): Promise<Product[]> {
     try {
       const query = {
-        sql: 'SELECT p.name AS product_name, SUM(o.quantity) AS total_quantity FROM products p JOIN orders o ON p.id = o.product_id GROUP BY p.id, p.name, p.category ORDER BY total_quantity DESC LIMIT $1',
+        sql: 'SELECT p.name AS name, SUM(o.quantity) AS quantity FROM products p JOIN orders o ON p.id = o.product_id GROUP BY p.id, p.name, p.category ORDER BY quantity DESC LIMIT $1',
         values: [number],
       };
 
@@ -120,7 +121,6 @@ export class ProductStore {
 
       return result.rows;
     } catch (err) {
-      logger.error(`Could not find top products Error: ${err}`);
       throw err;
     }
   }

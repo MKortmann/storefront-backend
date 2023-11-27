@@ -105,7 +105,7 @@ const getTopProducts = async (req: Request, res: Response) => {
     res.status(200).send(products);
   } catch (err) {
     res.status(400).json({
-      error: `Could not find top ${number}products`,
+      error: `Could not find top ${number} products`,
       err,
     });
   }

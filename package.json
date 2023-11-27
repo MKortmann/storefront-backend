@@ -20,7 +20,7 @@
     "prod": "concurrently 'npm run start:prod' 'npm run watch:ts'",
     "start:prod": "nodemon --watch dist dist/server.js",
     "watch:ts": "tsc --watch",
-    "test": "npm run build && jasmine --config=./jasmine.json",
+    "test": "cross-env ENV=test npm run build && cross-env ENV=test jasmine --config=./jasmine.json",
     "test:watch": "jasmine --config=./jasmine.json --watch"
   },
   "author": "Marcelo Kortmann",
@@ -35,6 +35,7 @@
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.44.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",

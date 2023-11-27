@@ -14,6 +14,6 @@ CREATE TABLE IF NOT EXISTS orders (
 -- Just Sample Data to be Able to Test Fully
 INSERT INTO orders (quantity, order_status, created_at, product_id, user_id)
 VALUES
-  (10, 'actived', '2023-01-01 10:00:00', 1, 1),
-  (5, 'actived', '2023-01-02 12:30:00', 2, 2),
+  (10, 'active', '2023-01-01 10:00:00', 1, 1),
+  (5, 'active', '2023-01-02 12:30:00', 2, 2),
   (20, 'Completed', '2023-01-03 15:45:00', 3, 1);

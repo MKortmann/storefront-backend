@@ -5,20 +5,15 @@ import 'jasmine-expect';
 const specOrderStore = 'orderStoreSpec.ts';
 
 describe(specOrderStore, () => {
-  // let orderStore;
   let orderStore = new OrderStore();
 
   beforeAll(() => {
-    // Initialize or mock any necessary resources before running the tests
-    //@ts-ignoreö
     logger.warn('Model Test: Order');
   });
 
   beforeEach(() => {});
 
-  afterAll(() => {
-    // Clean up or release any resources after running all tests
-  });
+  afterAll(() => {});
 
   const describeIndexMethod = 'index method';
   describe(describeIndexMethod, () => {
@@ -37,7 +32,7 @@ describe(specOrderStore, () => {
           expect(order.product_id).toBeDefined();
           expect(order.user_id).toBeDefined();
         });
-        logTestFinish(specOrderStore, describeIndexMethod,  itDescription);
+        logTestFinish(specOrderStore, describeIndexMethod, itDescription);
       } catch (err: unknown) {
         logTestError(specOrderStore, describeIndexMethod, itDescription, err);
         throw err;
@@ -50,72 +45,125 @@ describe(specOrderStore, () => {
     const itDescription = 'should fetch a specific order by ID';
     it(itDescription, async () => {
       try {
-        logger.warn(`${specOrderStore} - ${describeShowMethod}: ${itDescription} - started`)
+        logger.warn(
+          `${specOrderStore} - ${describeShowMethod}: ${itDescription} - started`
+        );
         const orderId = '1';
+        logger.info(`OrderId: ${orderId}`);
         const order: Order = await orderStore.show(orderId);
-        logger.info(`${JSON.stringify(order)}`)
+
+        logger.info(`Result of orderStore.show: ${JSON.stringify(order)}`);
         expect(typeof order).toBe('object');
 
-
-        const expectedProperties: (keyof Order)[] = ['id','quantity','order_status', 'created_at','product_id','user_id' ]
+        const expectedProperties: (keyof Order)[] = [
+          'id',
+          'quantity',
+          'order_status',
+          'created_at',
+          'product_id',
+          'user_id',
+        ];
         expectedProperties.forEach((property: keyof Order) => {
           expect(order[property]).toBeDefined();
         });
-        logger.warn(`${specOrderStore} - ${describeShowMethod}: ${itDescription} - successfully finished`)
+        logger.warn(
+          `${specOrderStore} - ${describeShowMethod}: ${itDescription} - successfully finished`
+        );
       } catch (err) {
-        logger.error(`${specOrderStore} - ${describeShowMethod}: ${itDescription} - failed: ${err}`)
+        logger.error(
+          `${specOrderStore} - ${describeShowMethod}: ${itDescription} - failed: ${err}`
+        );
       }
     });
   });
 
-  // // Add more describe blocks for other methods like create, delete, currentOrderByUser, etc.
+  // const describeCreateMethod = 'create method';
+  // describe(describeCreateMethod, () => {
+  //   const itDescription = 'should create a new order';
+  //   it(itDescription, async () => {
+  //     try {
+  //       logger.warn(
+  //         `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - started`
+  //       );
+  //       const date = new Date();
+  //       const newOrder = {
+  //         quantity: 12,
+  //         order_status: 'active',
+  //         product_id: 1,
+  //         user_id: 1,
+  //         created_at: date,
+  //       };
+  //       const createdOrder: Order = await orderStore.create(newOrder);
 
-  const describeCreateMethod = "create method"
-  describe(describeCreateMethod, () => {
-    const itDescription = 'should create a new order';
+  //       expect(createdOrder.id).toBeDefined();
+  //       expect(createdOrder.quantity).toContain(12);
+  //       expect(createdOrder.order_status).toBe('active');
+  //       expect(createdOrder.created_at).toEqual(date);
+  //       expect(createdOrder.product_id).toContain(1);
+  //       expect(createdOrder.user_id).toContain(1);
+
+  //       logger.warn(
+  //         `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - successfully finished`
+  //       );
+  //     } catch (err) {
+  //       logger.error(
+  //         `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - failed: ${err}`
+  //       );
+  //       throw err;
+  //     }
+  //   });
+  // });
+
+  // const describeDeleteMethod = 'delete method';
+  // describe(describeDeleteMethod, () => {
+  //   const itDescription = 'should delete an order with specific id';
+  //   it(itDescription, async () => {
+  //     try {
+  //       logTestStart(specOrderStore, describeDeleteMethod, itDescription);
+  //       const orderId = '4';
+  //       const result = await orderStore.delete(orderId);
+  //       expect(result).toBeNumber();
+  //       expect(result).toBeGreaterThanOrEqual(1);
+  //     } catch (err) {
+  //       logger.error(
+  //         `${specOrderStore} - ${describeDeleteMethod}: ${itDescription} - failed: ${err}`
+  //       );
+  //       throw err;
+  //     }
+  //   });
+  // });
+
+  const describeOrderByUserMethod = 'currentOrderByUser method';
+  describe(describeOrderByUserMethod, () => {
+    const itDescription = 'should fetch active orders for a user';
     it(itDescription, async () => {
       try {
-        logger.warn(`${specOrderStore} - ${describeCreateMethod}: ${itDescription} - started`)
-        const date = new Date();
-        const newOrder = {
-          "quantity": 12,
-          "order_status": "active",
-          "product_id": 1,
-          "user_id": 1,
-          "created_at": date,
-        };
-        const createdOrder: Order = await orderStore.create(newOrder);
+        logger.warn(
+          `${specOrderStore} - ${describeOrderByUserMethod}: ${itDescription} - started`
+        );
+        const userId = '1';
+        const status = 'active';
+        const orders = await orderStore.currentOrderByUser(userId, status);
+        logger.warn(`result of order: ${JSON.stringify(orders)}`);
 
-            expect(createdOrder.id).toBeDefined();
-            expect(createdOrder.quantity).toContain(12)
-            expect(createdOrder.order_status).toBe("active");
-            expect(createdOrder.created_at).toEqual(date);
-            expect(createdOrder.product_id).toContain(1);
-            expect(createdOrder.user_id).toContain(1)
+        expect(Array.isArray(orders)).toBe(true);
+        expect(orders.length).toBeGreaterThan(0);
 
-        logger.warn(`${specOrderStore} - ${describeCreateMethod}: ${itDescription} - successfully finished`)
-      } catch(err) {
-        logger.error(`${specOrderStore} - ${describeCreateMethod}: ${itDescription} - failed: ${err}`)
+        expect(orders[0].id).toBe(1);
+        expect(Number(orders[0].quantity)).toEqual(10);
+        expect(orders[0].order_status).toBe('active');
+        expect(Number(orders[0].product_id)).toBe(1);
+        expect(Number(orders[0].user_id)).toBe(1);
+
+        logger.warn(
+          `${specOrderStore} - ${describeOrderByUserMethod}: ${itDescription} - successfully finished`
+        );
+      } catch (err) {
+        logger.error(
+          `${specOrderStore} - ${describeOrderByUserMethod}: ${itDescription} - failed: ${err}`
+        );
         throw err;
-
       }
     });
   });
-
-  // describe('delete method', () => {
-  //   it('should delete a specific order by ID', async () => {
-  //     const orderId = '1';
-  //     const deletedCount = await orderStore.delete(orderId);
-  //     // Add expectations here based on the expected behavior of the delete method
-  //   });
-  // });
-
-  // describe('currentOrderByUser method', () => {
-  //   it('should fetch active orders for a user', async () => {
-  //     const userId = '1';
-  //     const status = 'active';
-  //     const orders = await orderStore.currentOrderByUser(userId, status);
-  //     // Add expectations here based on the expected behavior of the currentOrderByUser method
-  //   });
-  // });
 });

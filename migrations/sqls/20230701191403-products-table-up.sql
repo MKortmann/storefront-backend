@@ -10,4 +10,5 @@ INSERT INTO products (name, price, category)
 VALUES
   ('Samsung Note 20', 650, 'Electronics'),
   ('Sweater', 29.99, 'Clothing'),
-  ('Shovel', 19.99, 'Home and Garden');
+  ('Shovel', 19.99, 'Home and Garden'),
+  ('Dark Chocolate', 2.99, 'Sweets');

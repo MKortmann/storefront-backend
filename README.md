@@ -14,6 +14,7 @@ Your application must make use of the following libraries:
 - db-migrate from npm for migrations
 - jsonwebtoken from npm for working with JWTs
 - jasmine from npm for testing
+- it is not using sequelize for tests using database, but it would be an possible upgrade for the future!!!
 
 ## Steps to Completion
 

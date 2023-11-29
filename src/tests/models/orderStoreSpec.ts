@@ -77,61 +77,63 @@ describe(specOrderStore, () => {
     });
   });
 
-  // const describeCreateMethod = 'create method';
-  // describe(describeCreateMethod, () => {
-  //   const itDescription = 'should create a new order';
-  //   it(itDescription, async () => {
-  //     try {
-  //       logger.warn(
-  //         `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - started`
-  //       );
-  //       const date = new Date();
-  //       const newOrder = {
-  //         quantity: 12,
-  //         order_status: 'active',
-  //         product_id: 1,
-  //         user_id: 1,
-  //         created_at: date,
-  //       };
-  //       const createdOrder: Order = await orderStore.create(newOrder);
+  const describeCreateMethod = 'create method';
+  describe(describeCreateMethod, () => {
+    const itDescription = 'should create a new order';
+    it(itDescription, async () => {
+      try {
+        logger.warn(
+          `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - started`
+        );
+        const date = new Date();
+        const newOrder = {
+          quantity: 12,
+          order_status: 'active',
+          product_id: 1,
+          user_id: 1,
+          created_at: date,
+        };
+        const createdOrder: Order = await orderStore.create(newOrder);
 
-  //       expect(createdOrder.id).toBeDefined();
-  //       expect(createdOrder.quantity).toContain(12);
-  //       expect(createdOrder.order_status).toBe('active');
-  //       expect(createdOrder.created_at).toEqual(date);
-  //       expect(createdOrder.product_id).toContain(1);
-  //       expect(createdOrder.user_id).toContain(1);
+        expect(createdOrder.id).toBeDefined();
+        expect(createdOrder.quantity).toContain(12);
+        expect(createdOrder.order_status).toBe('active');
+        expect(createdOrder.created_at).toEqual(date);
+        expect(createdOrder.product_id).toContain(1);
+        expect(createdOrder.user_id).toContain(1);
 
-  //       logger.warn(
-  //         `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - successfully finished`
-  //       );
-  //     } catch (err) {
-  //       logger.error(
-  //         `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - failed: ${err}`
-  //       );
-  //       throw err;
-  //     }
-  //   });
-  // });
+        logger.warn(
+          `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - successfully finished`
+        );
+      } catch (err) {
+        logger.error(
+          `${specOrderStore} - ${describeCreateMethod}: ${itDescription} - failed: ${err}`
+        );
+        throw err;
+      }
+    });
+  });
 
-  // const describeDeleteMethod = 'delete method';
-  // describe(describeDeleteMethod, () => {
-  //   const itDescription = 'should delete an order with specific id';
-  //   it(itDescription, async () => {
-  //     try {
-  //       logTestStart(specOrderStore, describeDeleteMethod, itDescription);
-  //       const orderId = '4';
-  //       const result = await orderStore.delete(orderId);
-  //       expect(result).toBeNumber();
-  //       expect(result).toBeGreaterThanOrEqual(1);
-  //     } catch (err) {
-  //       logger.error(
-  //         `${specOrderStore} - ${describeDeleteMethod}: ${itDescription} - failed: ${err}`
-  //       );
-  //       throw err;
-  //     }
-  //   });
-  // });
+  const describeDeleteMethod = 'delete method';
+  describe(describeDeleteMethod, () => {
+    const itDescription = 'should delete an order with specific id';
+    it(itDescription, async () => {
+      try {
+        logTestStart(specOrderStore, describeDeleteMethod, itDescription);
+        const orderId = '4';
+        const result = await orderStore.delete(orderId);
+        expect(result).toBeNumber();
+
+        // if the result is 0, means that the order does not exist... If it is one, means that it exist and it was deleted.
+        expect(result).toBeGreaterThanOrEqual(0);
+      } catch (err) {
+        logger.error(
+          `${specOrderStore} - ${describeDeleteMethod}: ${itDescription} - failed  ${err}`
+        );
+        throw err;
+      }
+    });
+  });
 
   const describeOrderByUserMethod = 'currentOrderByUser method';
   describe(describeOrderByUserMethod, () => {

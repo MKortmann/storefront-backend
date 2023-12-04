@@ -52,7 +52,7 @@ const createUser = async (req: Request, res: Response) => {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
-    password: req.body.password,
+    password_digest: req.body.password,
   };
   logger.info(`User requested to be created: ${JSON.stringify(user)}`);
   try {
@@ -98,7 +98,7 @@ const updateUser = async (req: Request, res: Response) => {
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     email: req.body.email,
-    password: req.body.password,
+    password_digest: req.body.password,
   };
   const id = req.params.id;
   try {

@@ -10,7 +10,7 @@ export type User = {
   firstname: string;
   lastname: string;
   email: string;
-  password: string;
+  password_digest: string;
 };
 
 const pepper = process.env.PEPPER;
@@ -58,7 +58,7 @@ export class UserStore {
   async create(u: User): Promise<User> {
     try {
       const salt = await bcrypt.genSalt(salt_rounds);
-      const hash = await bcrypt.hashSync(u.password + pepper, salt);
+      const hash = await bcrypt.hashSync(u.password_digest + pepper, salt);
 
       const query = {
         sql: 'INSERT INTO users (firstname, lastname, email, password_digest) VALUES($1, $2, $3, $4) RETURNING *',

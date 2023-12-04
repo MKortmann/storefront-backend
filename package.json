@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start-nodemon": "npm run prettier & nodemon src/server.ts",
+    "start-server": "npm run prettier & nodemon src/server.ts",
     "start": "concurrently 'npm run docker' 'npm run start-nodemon'",
     "forceStart": "docker-compose up --force-recreate && nodemon src/service.ts",
     "migrate:docker": "docker exec -it p-02-storefrontbackendapi-postgres-1 db-migrate up --config /app/config/database.json -e dev",

@@ -48,9 +48,11 @@ const createProduct = async (req: Request, res: Response) => {
 
 const deleteProduct = async (req: Request, res: Response) => {
   const id = req.params.id;
+  console.log(`id: ${id}`);
 
   try {
     const result = await store.delete(id);
+    console.log(`Result of deleting: ${result}`);
     if (!result) {
       logger.warn(`Product with id: ${id} not found`);
       res.status(404).json({ error: `Product with id: ${id} not found` });
@@ -59,6 +61,7 @@ const deleteProduct = async (req: Request, res: Response) => {
       res.status(200).json({ info: `Product with id: ${id} deleted` });
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: `Error deleting a product with id: ${id}`, err });
   }
 };

@@ -5,7 +5,7 @@ export type Order = {
   id?: number;
   quantity: number;
   order_status: string;
-  created_at: Date;
+  created_at?: Date;
   product_id: number;
   user_id: number;
 };

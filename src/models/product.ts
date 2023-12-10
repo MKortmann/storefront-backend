@@ -74,8 +74,12 @@ export class ProductStore {
         sql: 'DELETE FROM products WHERE id=($1)',
         values: [id],
       };
+      console.log(`query: ${JSON.stringify(query)}`);
       const conn = await Client.connect();
       const result = await conn.query(query.sql, query.values);
+      logger.info(
+        `Result from deleting product with id=${id}: ${JSON.stringify(result)}`
+      );
       conn.release();
 
       logger.info(`Try to delete product result: ${JSON.stringify(result)}`);

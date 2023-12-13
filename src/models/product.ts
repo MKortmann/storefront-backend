@@ -121,7 +121,7 @@ export class ProductStore {
       const result = await conn.query(query.sql, query.values);
       conn.release();
 
-      logger.info(`showTopProducts - result rows: ${result.rows}`);
+      logger.info(`showTopProducts - result rows: ${JSON.stringify(result.rows)}`);
 
       return result.rows;
     } catch (err) {

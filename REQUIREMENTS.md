@@ -14,6 +14,8 @@ These are the notes from a meeting with the frontend developer that describe wha
   > products/:id [GET]
 - Create [token required]
   > products [POST]
+- [OPTIONAL] delete product by id
+  > products/:id [DELETE]
 - [OPTIONAL] Top 5 most popular products
   > products/top?number=:number [GET]
 - [OPTIONAL] Products by category (args: product category)
@@ -26,16 +28,41 @@ These are the notes from a meeting with the frontend developer that describe wha
   > users [GET]
 
 - Show [Bearer token required]
-  > user/:id [GET]
-- Create N[Bearer token required]
+  > user/:id [GET] > [OPTIONAL] -> at user/:id I will not only return the user but the last 5 orders order by timestamp descending...
+- Create N [Bearer token required]
   > user [POST]
+- DELETE N [Bearer token required]
+  > user/:id [DEL]
+- [OPTIONAL] UPDATE [Bearer token required]
+  > user/:id [PUT]
+- [OPTIONAL] AUTHENTICATE [Bearer token required]
+  > user/:id [PUT]
 
 #### Orders
+
+<!-- I just made one endpoint that fullfill the both first request below -->
 
 - Current Order by user (args: user id)[Bearer token required]
   > users/:user_id/orders/current [GET]
 - [OPTIONAL] Completed Orders by user (args: user id)[Bearer token required]
   > users/:user_id/orders/completed [GET]
+- [OPTIONAL] Add a popular products endpoint that sends back the 5 most commonly ordered items
+  > products/top/:number
+
+<!-- The both request above will be replaced by: -->
+
+- Current Order by user (args: user id)[Bearer token required]
+
+  > users/:user_id/orders/:status [GET]
+
+- [OPTIONAL] Index
+  > ORDERS [GET]
+- [OPTIONAL] Show
+  > ORDERS/:id [GET]
+- [OPTINAL] Create [token required]
+  > ORDER [POST]
+  - [OPTIONAL] delete order by id
+    > orders/:id [DELETE]
 
 ## Data Shapes
 
@@ -58,15 +85,15 @@ These are the notes from a meeting with the frontend developer that describe wha
   > VARCHAR(150)
 - lastName
   > VARCHAR(150)
-- password_digest
-  > VARCHAR(150)
 - email - optional
   > VARCHAR(100)
+- password_digest
+  > VARCHAR(150)
 
 #### Orders
 
 - id
-  > SERIAL PRIMARY KEY
+  > INT PRIMARY KEY
 - quantity of each product in the order
   > BIGINT
 - order_status (active or complete)

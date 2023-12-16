@@ -53,6 +53,20 @@ However, the main technologies used in this project are:
 
 _For any problems, do not forget to check the Troubleshooting section_
 
+### Summary of the steps to do
+
+> If you encountered problems here, follow the tutorial below that explain more clearly these steps.
+
+1. Install Node.js and docker.
+2. Start docker engine
+3. clone the repository
+4. npm run install
+5. npm run start or npm run start-on-windows
+6. rename the .env copy to .env at the root folder
+7. Install postman
+8. Import postman collection at rootfolder called: Udacity-FullStack-P-02.postman_collection
+9. You are ready now to make requests and test the application
+
 ### Requirements: Install Docker Desktop & Node.js
 
 Before cloning the repository, make sure you have the docker desktop installed and running. It is necessary because I am using docker-technology. The docker engine will start with a docker-compose to spin a postgres docker image, copy the necessary config to it and execute the migration.

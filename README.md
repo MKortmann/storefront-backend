@@ -1,58 +1,192 @@
-# Storefront Backend Project
+# Storefronend Backend API
 
-## Getting Started
+The project consist of developing a RESTful API with a postgresSQL database. The API will manage the requests done from a frontend web store application like amazon.
 
-This repo contains a basic Node and Express app to get you started in constructing an API. To get started, clone this repo and run `yarn` in your terminal at the project root.
+## Goal
 
-## Required Technologies
+Architect a database, including its tables and columns, to meet the data requirements, and create a RESTful API that exposes, stores, and manages information for the frontend application.
+See the REQUIREMENTS.md & INSTRUCTIONS.md files.
 
-Your application must make use of the following libraries:
+## Features
 
-- Postgres for the database
-- Node/Express for the application logic
-- dotenv from npm for managing environment variables
-- db-migrate from npm for migrations
-- jsonwebtoken from npm for working with JWTs
-- jasmine from npm for testing
-- it is not using sequelize for tests using database, but it would be an possible upgrade for the future!!!
+- Include tests for API endpoints & database actions
+- Provide user authentication [JWT](https://jwt.io/) (jsonwebtokens) & encryption (bycript)
+- [PostgresSQL](https://hub.docker.com/_/postgres) docker database image
+- Dockerfile and Docker Compose file
+- Migration Db services
 
-## Steps to Completion
+## Technlogies
 
-### 1. Plan to Meet Requirements
+We are using many libraries as specified in the package.json to accomplish this project.
+However, the main technologies used in this project are:
 
-In this repo there is a `REQUIREMENTS.md` document which outlines what this API needs to supply for the frontend, as well as the agreed upon data shapes to be passed between front and backend. This is much like a document you might come across in real life when building or extending an API.
+- Node.js
+  A JavaScript runtime built on Chrome's V8 engine to execute JS code server-side.
+- Express
+  Minimalist web framework for Node.js simplifying the creation of APIs web apps with rounting and middleware
+- Typescript
+  A Superset of JS adding static types among others, enhancing code maintainability and developer productivity
+- eslint
+  A tool for identifying and force common programming errors
+- prettier
+  A code formatter that automatically formats code ensuring styling consistent.
+- jasmine & supertest
+  A behavior-driven testing framework for JS and Superset allows testing HTTP assertions
+- dotenv
+  Module to loads environment variable from a '.env' file.
+- CORS
+  Middleware for Express enabling Cross-origin Resource Sharing
+- pg
+  A PostgreSQL client for Node.js for interaction with PosgreSQL database
+- db-migrate
+  Database migration tool for Node.js applications used to control and management databse schema changes
+- db-migrate-pg
+  A PostgreSQL database driver for the db-migrate tool, supports PostgreSQL-specific database migrations.
+- bcrypt
+  A password-hashing library for securely hash and compare passwords, used here to authentication
+- jsonwebtoken
+  Librared used for generating and verifying JSON Web Tokens (JWTs).
+- winston & Kleur
+  Logging library used together with kleur allowing not only transport options but also colors to improve readability of log outputs during development.
 
-Your first task is to read the requirements and update the document with the following:
+## How to install & start the database and server
 
-- Determine the RESTful route for each endpoint listed. Add the RESTful route and HTTP verb to the document so that the frontend developer can begin to build their fetch requests.
-  **Example**: A SHOW route: 'blogs/:id' [GET]
+_For any problems, do not forget to check the Troubleshooting section_
 
-- Design the Postgres database tables based off the data shape requirements. Add to the requirements document the database tables and columns being sure to mark foreign keys.
-  **Example**: You can format this however you like but these types of information should be provided
-  Table: Books (id:varchar, title:varchar, author:varchar, published_year:varchar, publisher_id:string[foreign key to publishers table], pages:number)
+### Requirements: Install Docker Desktop & Node.js
 
-**NOTE** It is important to remember that there might not be a one to one ratio between data shapes and database tables. Data shapes only outline the structure of objects being passed between frontend and API, the database may need multiple tables to store a single shape.
+Before cloning the repository, make sure you have the docker desktop installed and running. It is necessary because I am using docker-technology. The docker engine will start with a docker-compose to spin a postgres docker image, copy the necessary config to it and execute the migration.
 
-### 2. DB Creation and Migrations
+Make sure you have installed the [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-Now that you have the structure of the database outlined, it is time to create the database and migrations. Add the npm packages dotenv and db-migrate that we used in the course and setup your Postgres database. If you get stuck, you can always revisit the database lesson for a reminder.
+You will also need to install the [Node.js](https://nodejs.org/en) that comes with the npm (Node Package Manager).
 
-You must also ensure that any sensitive information is hashed with bcrypt. If any passwords are found in plain text in your application it will not pass.
+### Clone the project repository
 
-### 3. Models
+Install the dependencies and start the back-end server
 
-Create the models for each database table. The methods in each model should map to the endpoints in `REQUIREMENTS.md`. Remember that these models should all have test suites and mocks.
+```
+npm install
+```
 
-### 4. Express Handlers
+> Rename the **.env copy file to .env**. This file contains the environment variables
 
-Set up the Express handlers to route incoming requests to the correct model method. Make sure that the endpoints you create match up with the enpoints listed in `REQUIREMENTS.md`. Endpoints must have tests and be CORS enabled.
+### Start Server & Database
 
-### 5. JWTs
+- Makes sure the docker engine is running. For that, just start the docker service.
 
-Add JWT functionality as shown in the course. Make sure that JWTs are required for the routes listed in `REQUIUREMENTS.md`.
+It starts the RESTful server at localhost port 3001 & database in a docker image
 
-### 6. QA and `README.md`
+At WSL or linux:
 
-Before submitting, make sure that your project is complete with a `README.md`. Your `README.md` must include instructions for setting up and running your project including how you setup, run, and connect to your database.
+```
+npm run start
+```
 
-Before submitting your project, spin it up and test each endpoint. If each one responds with data that matches the data shapes from the `REQUIREMENTS.md`, it is ready for submission!
+At Windows:
+
+```
+npm run start-on-windows
+```
+
+Another option below it so start the database and the server separately (on different consoles)
+
+```
+npm run start-server
+```
+
+Start the database
+
+```
+npm run start-database
+```
+
+## How to log/debug the database
+
+The database is a [PostgresSQL](https://hub.docker.com/_/postgres) docker image that runs automatically with the npm run start-database.
+
+However, if you want to check some details, below are some commands:
+
+Get the container id:
+
+```
+docker ps
+```
+
+Connect at CLI to the PostgresSQL database container using the docker and psql command with the appropriate options
+
+```
+docker exec -it <container-id> psql -U postgres
+```
+
+it should not prompt you to a password because is how the default authentication method is configured in the PostgreSQL image.
+By default, the PostgreSQL Docker image uses "trust" authentication for connections from the same host (localhost or Docker containers on the same machine).
+In the `pg_hba.conf`file (located in the PostgreSQL data directory (`/var/lib/postgresql/data`)), there is an entry that allows connections from the same host without requiring a password. This is called "trust" authentication.
+
+Some commands to debug it
+
+List the databases
+
+```
+\l
+```
+
+Connect to a specific database
+
+```
+\c <database-name>
+```
+
+You can use SQL commands to check the tables, e.g.:
+
+```
+SELECT * FROM orders;
+```
+
+## Doing some requests for the API
+
+### Step 1
+
+It is very advisable to use the [Postman](https://www.postman.com/) for that. At the github repository you can import the postman collection with all the endpoints.
+
+Alterntive to Postman can be [Insomnia](https://insomnia.rest/)
+
+### Step 2
+
+Import the JSON file located at the root folder of this project, named "Udacity-FullStack-P-02.postman_collection.json", into Postman. There you will find all the endpoints that you can use to test the application.
+
+## Testing the API through Jasmine
+
+It will test all the API endpoints & database actions
+
+```
+npm run test
+```
+
+## Troubleshooting
+
+- Problem 1: running the code in windows
+
+At package.json just replace the npm run start ... for
+
+```
+"start": "concurrently \"npm run start-database\" \"npm run start-server\"",
+```
+
+Or run separately the command npm run start-server and npm run start-databse
+
+- Problem 2: at npm install command
+
+If you got problems running npm run start-database or npm run start-server for any reason. Just try the flag: --force, like:
+
+```
+npm run start-database --force
+```
+
+- Problem 3: missing .env file
+
+Just rename at root folder the file: _.env copy_ to _.env_
+
+## Contributions
+
+The Project was completed by me as a part of the FullStack Nanodegree Project. I fullfilled all the requirements and also implemented extra features.

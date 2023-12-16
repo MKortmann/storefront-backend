@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "start": "concurrently 'npm run start-database' 'npm run start-server'",
+    "start-on-windows": "concurrently \"npm run start-database\" \"npm run start-server\"",
     "start-server": "npm run prettier & nodemon src/server.ts",
     "start-database": "docker-compose build && docker-compose up",
     "forceStart": "docker-compose up --force-recreate && nodemon src/service.ts",

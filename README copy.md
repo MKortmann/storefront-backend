@@ -9,9 +9,9 @@ See the REQUIREMENTS.md file.
 
 ## Features
 
-- Include tests
-- Provide user authentication tokens
-- PostgresSQL database running in a docker
+- Include tests for API endpoints & database actions
+- Provide user authentication [JWT](https://jwt.io/) (jsonwebtokens) & encryption (bycript)
+- [PostgresSQL](https://hub.docker.com/_/postgres) docker database image
 - Dockerfile and Docker Compose file
 - Migration Db services
 
@@ -34,7 +34,7 @@ However, the main technologies used in this project are:
   A behavior-driven testing framework for JS and Superset allows testing HTTP assertions
 - dotenv
   Module to loads environment variable from a '.env' file.
-- cors
+- CORS
   Middleware for Express enabling Cross-origin Resource Sharing
 - pg
   A PostgreSQL client for Node.js for interaction with PosgreSQL database
@@ -49,34 +49,48 @@ However, the main technologies used in this project are:
 - winston & Kleur
   Logging library used together with kleur allowing not only transport options but also colors to improve readability of log outputs during development.
 
+## How to install & start the database and server
 
-
-## How to install & start the server
-
-### Docker Desktop
+### Requirements: Install Docker Desktop & Node.js
 
 Before cloning the repository, make sure you have the docker desktop installed. It is necessary because I am using a docker-compose to spin a postgres docker image, copy the necessary config to it and execute the migration.
 
-Make sure you have installed the Docker Desktop
-https://www.docker.com/products/docker-desktop/
+Make sure you have installed the [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
+You will also need to install the [Node.js](https://nodejs.org/en) that comes with the npm (Node Package Manager).
 
-You will also need to install the Node.js that comes with the npm.
-https://nodejs.org/en
+### Clone the project repository
 
-
-
-### Clone the repository
+Install the dependencies and start the back-end server
 
 ```
 npm install
 npm run build
+```
+
+### Start Server & Database
+
+It starts the RESTful server at localhost port 3001 & database in a docker image
+
+```
 npm run start
 ```
 
-## How to run the docker
+Another option below it so start the database and the server separately (on different consoles)
 
-The docker will be running automatically with npm run start.
+```
+npm run start-server
+```
+
+Start the database
+
+```
+npm run start-database
+```
+
+## How to run the database
+
+The database is a [PostgresSQL](https://hub.docker.com/_/postgres) docker image that runs automatically with the npm run start-database.
 
 However, if you want to check some details, below are some commands:
 
@@ -96,41 +110,21 @@ it should not prompt you to a password because is how the default authentication
 By default, the PostgreSQL Docker image uses "trust" authentication for connections from the same host (localhost or Docker containers on the same machine).
 In the `pg_hba.conf`file (located in the PostgreSQL data directory (`/var/lib/postgresql/data`)), there is an entry that allows connections from the same host without requiring a password. This is called "trust" authentication.
 
-## Some Explanations
-
-
-The command:
-
-```
-npm install
-npm run build
-npm run start
-```
-
-It will run the docker and also start the RESTful server at localhost port 3001.
-
-
 ## Doing some requests for the API
 
 ### Step 1
 
-It is very advisable to use the Postman for that. At the github repository you can import the postman collection with all the endpoints.
+It is very advisable to use the [Postman](https://www.postman.com/) for that. At the github repository you can import the postman collection with all the endpoints.
+
+Alterntive to Postman can be [Insomnia](https://insomnia.rest/)
 
 ### Step 2
-Create an user, get the json webtoken returned, insert it. Now you are able to test all the endpoints:
- - users
- - orders
- - products
 
+Import the JSON file located at the root folder of this project, named "Udacity-FullStack-P-02.postman_collection.json", into Postman. There you will find all the endpoints that you can use to test the application.
 
+## Testing the API through Jasmine
 
-```
-http://localhost:3000/
-```
-
-## Testing the API
-
-Just do:
+It will test all the API endpoints & database actions
 
 ```
 npm run test
@@ -138,4 +132,4 @@ npm run test
 
 ## Contributions
 
-The Project was completed by me as a part of the FullStack Nanodegree Project. I fullfilled all all the requirements and also implemented additional features.
+The Project was completed by me as a part of the FullStack Nanodegree Project. I fullfilled all the requirements and also implemented extra features.

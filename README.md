@@ -109,7 +109,12 @@ npm run start-database
 
 7. **Install postman**
 8. **Import postman collection at rootfolder called: Udacity-FullStack-P-02.postman_collection**
+   > ALL THE ROUTES are defined at the postman collection and also at REQUIREMENTS.md
 9. **Congratulations!! You are ready now to make requests and test the application**
+
+   > Server is running at PORT 3001
+
+   > At docker-compose.yml file, it maps the host machine PORT 5433 to the container PORT 5432
 
 ## A Short Technical Explaining of the project
 

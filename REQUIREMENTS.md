@@ -6,6 +6,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 
 ## API Endpoints
 
+> _More Info check file at root folder: Udacity-FullStack-P-02.postman_collection_
+
 #### Products
 
 - Index
@@ -13,9 +15,9 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Show
   > products/:id [GET]
 - Create [token required]
-  > products [POST]
+  > product [POST]
 - [OPTIONAL] delete product by id
-  > products/:id [DELETE]
+  > product/:id [DELETE]
 - [OPTIONAL] Top 5 most popular products
   > products/top?number=:number [GET]
 - [OPTIONAL] Products by category (args: product category)
@@ -24,9 +26,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Users
 
 - Index [Bearer token required]
-
   > users [GET]
-
 - Show [Bearer token required]
   > user/:id [GET] > [OPTIONAL] -> at user/:id I will not only return the user but the last 5 orders order by timestamp descending...
 - Create N [Bearer token required]
@@ -36,7 +36,7 @@ These are the notes from a meeting with the frontend developer that describe wha
 - [OPTIONAL] UPDATE [Bearer token required]
   > user/:id [PUT]
 - [OPTIONAL] AUTHENTICATE [Bearer token required]
-  > user/:id [PUT]
+  > user/authenticate [POST]
 
 #### Orders
 
@@ -56,11 +56,11 @@ These are the notes from a meeting with the frontend developer that describe wha
   > users/:user_id/orders/:status [GET]
 
 - [OPTIONAL] Index
-  > ORDERS [GET]
+  > orders [GET]
 - [OPTIONAL] Show
-  > ORDERS/:id [GET]
+  > orders/:id [GET]
 - [OPTINAL] Create [token required]
-  > ORDER [POST]
+  > orders [POST]
   - [OPTIONAL] delete order by id
     > orders/:id [DELETE]
 

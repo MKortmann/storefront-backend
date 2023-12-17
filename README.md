@@ -227,6 +227,10 @@ npm run start-database --force
 
 Just rename at root folder the file: _.env copy_ to _.env_
 
+## Future ideas
+
+- Add swagger
+
 ## Contributions
 
 The Project was completed by me as a part of the FullStack Nanodegree Project. I fullfilled all the requirements and also implemented many extra features.

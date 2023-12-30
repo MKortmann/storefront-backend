@@ -12,7 +12,7 @@ services:
       # docker create a volume name postgres mounted to /var/lib/postgresql/data
       - postgres:/var/lib/postgresql/data
       # it maps a init.sql file at our host machine to the /docker...
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql #if we want to init with some sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql #here we can init the database with some specific config. E.g.: create test db, db user, set password
       # - ./postgres-data:/var/lib/postgresql/data
     # Docker reads the .env file and make it available to the container as it was defined there
     env_file:
@@ -30,8 +30,8 @@ services:
       - my_network
 
   migration_dev:
-    build:
-      context: .
+    #  short syntax, it implies that the current directory where this file is located, is the build context. At migration_test service we use the normal syntax.
+    build: .
     env_file:
       - .env
     # make sure the db is ready before to start the migration
@@ -41,6 +41,7 @@ services:
     # maps the migration directory from the host machine to the /migration directory within the container
     volumes:
       - ./migrations:/migrations
+    # it runs the migration at development environment (-e dev) and uses the config file and migrations file from the /migrations directory
     command: bash -c "db-migrate up --config /app/config/database.json -e dev --migrations-dir /migrations"
     networks:
       - my_network
@@ -72,7 +73,7 @@ services:
 
 volumes:
   postgres:
-
+#  important to connect different containers, in my case, different services to the same network. When services are connected to the same network, they can communicate with each other using their container names
 networks:
   my_network:
     driver: bridge

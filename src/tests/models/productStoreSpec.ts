@@ -25,9 +25,13 @@ describe(specProductStore, () => {
         expect(Array.isArray(products)).toBe(true);
         expect(products.length).toBeGreaterThan(0);
         expect(products[0].id).toBe(1);
-        expect(products[0].name).toBe('Samsung Note 20');
-        expect(Number(products[0].price)).toBe(650.0);
-        expect(products[0].category).toBe('Electronics');
+        expect(products[0].name).toBe('Milk and Honey');
+        expect(Number(products[0].price)).toBe(9.99);
+        expect(products[0].category).toBe('Book');
+        expect(products[0].url).toBe(
+          'https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+        );
+        expect(products[0].description).toBe('You can read it!');
 
         products.forEach((product) => {
           expect(product.id).toBeDefined;
@@ -58,7 +62,14 @@ describe(specProductStore, () => {
         logger.info(`Result of productStore.show: ${JSON.stringify(product)}`);
         expect(typeof product).toBe('object');
 
-        const expectedProperties: (keyof Product)[] = ['id', 'name', 'price', 'category'];
+        const expectedProperties: (keyof Product)[] = [
+          'id',
+          'name',
+          'price',
+          'url',
+          'description',
+          'category',
+        ];
         expectedProperties.forEach((property: keyof Product) => {
           expect(product[property]).toBeDefined();
         });
@@ -82,17 +93,24 @@ describe(specProductStore, () => {
           `${specProductStore} - ${describeCreateMethod}: ${itDescription} - started`
         );
         const date = new Date();
-        const newProduct = {
+        const newProduct: Product = {
           name: 'LG TV',
           price: 2000,
+          url: 'https://images.unsplash.com/photo-1584905066893-7d5c142ba4e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+          description: 'LG 85, 4k resolution',
           category: 'Electronics',
         };
+
         const createdProduct: Product = await productStore.create(newProduct);
 
         expect(createdProduct.id).toBeDefined();
         expect(createdProduct.name).toBe('LG TV');
         expect(Number(createdProduct.price)).toBe(2000);
         expect(createdProduct.category).toBe('Electronics');
+        expect(createdProduct.url).toBe(
+          'https://images.unsplash.com/photo-1584905066893-7d5c142ba4e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        );
+        expect(createdProduct.description).toBe('LG 85, 4k resolution');
 
         logger.warn(
           `${specProductStore} - ${describeCreateMethod}: ${itDescription} - successfully finished`
@@ -146,6 +164,8 @@ describe(specProductStore, () => {
           expect(item.name).toBeDefined();
           expect(item.price).toBeDefined();
           expect(item.category).toBeDefined();
+          expect(item.url).toBeDefined();
+          expect(item.description).toBeDefined();
         });
         logger.warn(
           `${specProductStore} - ${describeProductByCategory}: ${itDescription} - successfully finished`

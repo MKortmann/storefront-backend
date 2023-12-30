@@ -217,7 +217,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Dark Chocolate\",\r\n    \"price\": \"2\",\r\n    \"category\": \"sweet\"\r\n}",
+							"raw": "{  \r\n    \"name\": \"The Psychology of Money\",\r\n    \"price\": \"29.99\",\r\n    \"url\": \"https://images.unsplash.com/photo-1592496431122-2349e0fbc666?q=80&w=1212&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\",\r\n    \"description\": \"Timeless lessons on wealth, greed and happiness\",\r\n    \"category\": \"Book\"   \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

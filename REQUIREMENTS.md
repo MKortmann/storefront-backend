@@ -76,6 +76,10 @@ These are the notes from a meeting with the frontend developer that describe wha
   > INTEGER
 - [OPTIONAL] category
   > VARCHAR(50)
+- [OPTIONAL] url
+  > VARCHAR(1000)
+- [OPTIONAL] description
+  > TEXT
 
 #### User
 

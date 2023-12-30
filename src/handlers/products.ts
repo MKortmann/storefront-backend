@@ -30,9 +30,21 @@ const show = async (req: Request, res: Response) => {
 };
 
 const createProduct = async (req: Request, res: Response) => {
+  const requiredFields = ['name', 'price', 'url', 'description', 'category'];
+
+  // Check if all required fields are present in the request body
+  const missingFields = requiredFields.filter((field) => !(field in req.body));
+
+  if (missingFields.length > 0) {
+    return res.status(404).json({
+      error: `Missing required fields: ${missingFields.join(', ')}`,
+    });
+  }
   const product: Product = {
     name: req.body.name,
     price: req.body.price,
+    url: req.body.url,
+    description: req.body.description,
     category: req.body.category,
   };
   try {

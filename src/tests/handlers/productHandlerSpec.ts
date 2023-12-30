@@ -32,9 +32,11 @@ describe('Product handeler - GET /show', () => {
 describe('Product handeler - POST /product', () => {
   it('it should create an product', async () => {
     const newProduct: Product = {
-      name: 'Dark Chocolate',
-      price: 2,
-      category: 'sweet',
+      name: 'LG TV',
+      price: 2000,
+      url: 'https://images.unsplash.com/photo-1584905066893-7d5c142ba4e1?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      description: 'LG 85, 4k resolution',
+      category: 'Electronics',
     };
 
     const response = await request(app)
@@ -71,8 +73,8 @@ describe('Product handeler - GET PRODUCTS BY CATEGORY  /products/category', () =
     const result = JSON.parse(response.text);
 
     expect(response.body).toBeDefined();
-    expect(result[0].id).toBe(2);
-    expect(result[0].name).toBe('Sweater');
+    expect(result[0].id).toBe(6);
+    expect(result[0].name).toBe('Shirt');
     expect(result[0].price).toBe('29.99');
     expect(result[0].category).toBe('Clothing');
   });
